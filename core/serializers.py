@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Yield, DailyWeather, WateringLog, FertilizerLog, IrrigationPrediction, SoilSensorData
+from math import radians, sin, cos, sqrt, atan2
+from .models import WeatherRegion, Yield, WateringLog, FertilizerLog, IrrigationPrediction, SoilSensorData
 
 
 # -------------------------
@@ -32,23 +33,54 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-# -------------------------
-# Yield Serializer
-# -------------------------
+
+class WeatherRegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WeatherRegion
+        fields = "__all__"
+
+def haversine(lat1, lon1, lat2, lon2):
+    R = 6371  # km
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat/2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon/2)**2
+    return R * 2 * atan2(sqrt(a), sqrt(1-a))
+
 class YieldSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Yield
         fields = "__all__"
         read_only_fields = ["user", "created_at"]
 
+    def create(self, validated_data):
+        lat = validated_data["location_lat"]
+        lng = validated_data["location_lng"]
 
-# -------------------------
-# Daily Weather
-# -------------------------
-class DailyWeatherSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DailyWeather
-        fields = "__all__"
+        regions = WeatherRegion.objects.all()
+
+        # find nearest region within 50 km
+        nearest = None
+        min_dist = 999999 
+
+        for region in regions:
+            dist = haversine(lat, lng, region.latitude, region.longitude)
+            if dist < min_dist:
+                min_dist = dist
+                nearest = region
+
+        if nearest is None or min_dist > 50:
+            # Create new region automatically
+            nearest = WeatherRegion.objects.create(
+                name=f"Auto-{lat},{lng}",
+                latitude=lat,
+                longitude=lng,
+                radius_km=10
+            )
+
+        validated_data["weather_region"] = nearest
+        return super().create(validated_data)
+
 
 
 # -------------------------

@@ -28,11 +28,10 @@ This is a Django REST API project for tracking **farm yields, watering, and fert
 
 1. **Clone the repository**
 ```bash
-git clone <repo_url>
-cd irrigation_ai
+git clone https://github.com/nanotexnolagiya/ai_irrigation
+cd ai_irrigation
 python -m venv venv
 source venv/bin/activate   # Linux/macOS
-venv\Scripts\activate      # Windows
 pip install -r requirements.txt
 python manage.py makemigrations
 python manage.py migrate
