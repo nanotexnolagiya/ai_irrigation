@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from math import radians, sin, cos, sqrt, atan2
 from .models import WeatherRegion, Yield, WateringLog, FertilizerLog, IrrigationPrediction, SoilSensorData
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 # -------------------------
@@ -31,6 +32,23 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         return user
+
+    def to_representation(self, instance):
+        """
+        After creating the user, return tokens + user data.
+        """
+        refresh = RefreshToken.for_user(instance)
+        access = refresh.access_token
+
+        return {
+            "user": {
+                "id": instance.id,
+                "username": instance.username,
+                "email": instance.email,
+            },
+            "access": str(access),
+            "refresh": str(refresh),
+        }
 
 
 

@@ -1,5 +1,5 @@
 from django.urls import path
-from .auth_views import RegisterView
+from .auth_views import (RegisterView, MeView)
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -22,6 +22,8 @@ urlpatterns = [
 
     # Refresh token
     path("auth/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
+    
+    path("auth/me/", MeView.as_view(), name="auth-me"),
 
     path("yields/", YieldListCreateView.as_view(), name="yield-list"),
     path("yields/<int:pk>/", YieldDetailView.as_view(), name="yield-detail"),

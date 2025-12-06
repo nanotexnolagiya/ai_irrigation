@@ -94,6 +94,7 @@ export function Register({ onRegister, onSwitchToLogin }: RegisterProps) {
                 </div>
                 <input
                   type="text"
+                  autoComplete="off"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   placeholder="Foydalanuvchi nomini tanlang"
@@ -117,6 +118,7 @@ export function Register({ onRegister, onSwitchToLogin }: RegisterProps) {
                 <input
                   type="email"
                   value={formData.email}
+                  autoComplete="off"
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="sizning.email@example.com"
                   className={`w-full pl-12 pr-4 py-3 border rounded-lg ${
@@ -139,6 +141,7 @@ export function Register({ onRegister, onSwitchToLogin }: RegisterProps) {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
+                  autoComplete="new-password"
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   placeholder="Parol yarating (6+ belgi)"
                   className={`w-full pl-12 pr-12 py-3 border rounded-lg ${
@@ -210,19 +213,10 @@ export function Register({ onRegister, onSwitchToLogin }: RegisterProps) {
               Hisobingiz bormi?{' '}
               <button
                 onClick={onSwitchToLogin}
-                className="text-green-600"
+                className="text-green-600 cursor-pointer"
               >
                 Kirish
               </button>
-            </p>
-          </div>
-        </div>
-
-        {/* Demo Hint */}
-        <div className="mt-4 max-w-md mx-auto mb-6">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-blue-900">
-              <span className="font-medium">Demo rejim:</span> Ro'yxatdan o'tish simulyatsiya qilingan. Davom etish uchun ma'lumotlaringizni kiriting
             </p>
           </div>
         </div>

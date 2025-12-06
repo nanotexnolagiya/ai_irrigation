@@ -1,26 +1,26 @@
 import { useState } from 'react';
-import { Sprout, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Sprout, User, Lock, Eye, EyeOff } from 'lucide-react';
 
 interface LoginProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (username: string, password: string) => void;
   onSwitchToRegister: () => void;
 }
 
 export function Login({ onLogin, onSwitchToRegister }: LoginProps) {
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
 
   const validateForm = () => {
-    const newErrors: { email?: string; password?: string } = {};
+    const newErrors: { username?: string; password?: string } = {};
 
-    if (!formData.email) {
-      newErrors.email = 'Email kiritish shart';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email noto\'g\'ri';
+    if (!formData.username) {
+      newErrors.username = 'Foydalanuvchi nomi kiritish shart';
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Foydalanuvchi nomi kamida 3 ta belgidan iborat bo\'lishi kerak';
     }
 
     if (!formData.password) {
@@ -36,7 +36,7 @@ export function Login({ onLogin, onSwitchToRegister }: LoginProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      onLogin(formData.email, formData.password);
+      onLogin(formData.username, formData.password);
     }
   };
 
@@ -62,23 +62,24 @@ export function Login({ onLogin, onSwitchToRegister }: LoginProps) {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <label className="block text-sm text-gray-600 mb-2">Email</label>
+              <label className="block text-sm text-gray-600 mb-2">Foydalanuvchi nomi</label>
               <div className="relative">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                  <Mail className="w-5 h-5 text-gray-400" />
+                  <User className="w-5 h-5 text-gray-400" />
                 </div>
                 <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="sizning.email@example.com"
+                  type="text"
+                  autoComplete="off"
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  placeholder="Foydalanuvchi nomini tanlang"
                   className={`w-full pl-12 pr-4 py-3 border rounded-lg ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
+                    errors.username ? 'border-red-500' : 'border-gray-300'
                   }`}
                 />
               </div>
-              {errors.email && (
-                <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+              {errors.username && (
+                <p className="text-sm text-red-500 mt-1">{errors.username}</p>
               )}
             </div>
 
@@ -137,19 +138,10 @@ export function Login({ onLogin, onSwitchToRegister }: LoginProps) {
               Hisobingiz yo'qmi?{' '}
               <button
                 onClick={onSwitchToRegister}
-                className="text-green-600"
+                className="text-green-600 cursor-pointer"
               >
                 Ro'yxatdan o'tish
               </button>
-            </p>
-          </div>
-        </div>
-
-        {/* Demo Hint */}
-        <div className="mt-4 max-w-md mx-auto">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p className="text-sm text-blue-900">
-              <span className="font-medium">Demo rejim:</span> Davom etish uchun istalgan email va parol (6+ belgidan) kiriting
             </p>
           </div>
         </div>
